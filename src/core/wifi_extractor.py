@@ -13,14 +13,14 @@ from datetime import datetime
 
 import pandas as pd
 
-from utils.system_utils import SystemUtils, CommandResult
-from core.exceptions import (
+from src.utils.system_utils import SystemUtils, CommandResult
+from src.core.exceptions import (
     UnsupportedOperatingSystemError,
     NoWiFiProfilesFoundError,
     ProfileParsingError,
     InsufficientPrivilegesError
 )
-from config.settings import netsh_config
+from src.config.settings import netsh_config
 
 
 logger = logging.getLogger(__name__)

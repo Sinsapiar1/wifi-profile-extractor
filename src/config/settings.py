@@ -1,4 +1,4 @@
-﻿"""
+"""
 Configuration settings for WiFi Profile Extractor.
 """
 
@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 class AppConfig:
     APP_NAME: str = "WiFi Profile Extractor"
     APP_VERSION: str = "1.0.0"
+    APP_DESCRIPTION: str = "Professional WiFi profile extraction and management tool for Windows"
     PAGE_TITLE: str = "WiFi Profile Manager"
     PAGE_ICON: str = "🔐"
     LAYOUT: str = "wide"
