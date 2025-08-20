@@ -218,7 +218,7 @@ class PrivilegeManager:
             "is_admin": is_admin,
             "can_access_passwords": is_admin,
             "os_compatible": SystemUtils.is_windows(),
-            "recommendations": SystemUtils._get_privilege_recommendations(is_admin)
+            "recommendations": PrivilegeManager._get_privilege_recommendations(is_admin)
         }
     
     @staticmethod
