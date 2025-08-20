@@ -11,10 +11,10 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 from pathlib import Path
 
-# Agregar src al path para importaciones
-src_path = Path(__file__).parent
-if str(src_path) not in sys.path:
-    sys.path.insert(0, str(src_path))
+# Agregar raíz del proyecto al path para importaciones
+project_root = Path(__file__).parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 # Configure logging
 logging.basicConfig(
@@ -25,16 +25,16 @@ logger = logging.getLogger(__name__)
 
 # Import application modules con manejo de errores
 try:
-    from core.wifi_extractor import WiFiProfileExtractor, WiFiProfile
-    from core.exceptions import (
+    from src.core.wifi_extractor import WiFiProfileExtractor, WiFiProfile
+    from src.core.exceptions import (
         UnsupportedOperatingSystemError,
         InsufficientPrivilegesError,
         NoWiFiProfilesFoundError,
         WiFiExtractorBaseException
     )
-    from utils.system_utils import SystemUtils, PrivilegeManager
-    from utils.data_utils import DataExporter, DataFilter, DataFormatter
-    from config.settings import app_config
+    from src.utils.system_utils import SystemUtils, PrivilegeManager
+    from src.utils.data_utils import DataExporter, DataFilter, DataFormatter
+    from src.config.settings import app_config
 except ImportError as e:
     st.error(f"Error importing modules: {e}")
     st.error("Please ensure all project files are in place")
