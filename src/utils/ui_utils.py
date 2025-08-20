@@ -7,8 +7,8 @@ import pandas as pd
 from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
 
-from ..config.settings import app_config
-from ..config.constants import (
+from src.config.settings import app_config
+from src.config.constants import (
     PASSWORD_REVEAL_WARNING,
     MAX_PROFILES_DISPLAY,
     SUPPORTED_EXPORT_FORMATS
