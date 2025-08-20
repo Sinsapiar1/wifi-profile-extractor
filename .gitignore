@@ -1,0 +1,98 @@
+@"
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*`$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Application specific
+exports/
+temp/
+*.tmp
+
+# Security reports
+bandit-report.json
+safety-report.json
+
+# Documentation build
+site/
+docs/_build/
+
+# Project specific files
+fix_all_imports.py
+quick_fix.py
+"@ | Out-File -FilePath ".gitignore" -Encoding UTF8

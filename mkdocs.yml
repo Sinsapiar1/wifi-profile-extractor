@@ -1,0 +1,527 @@
+# mkdocs.yml
+site_name: WiFi Profile Extractor
+site_description: Professional WiFi profile extraction tool for Windows
+site_author: WiFi Profile Extractor Team
+site_url: https://github.com/yourusername/wifi-profile-extractor
+
+# Repository
+repo_name: yourusername/wifi-profile-extractor
+repo_url: https://github.com/yourusername/wifi-profile-extractor
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2024 WiFi Profile Extractor Contributors
+
+# Configuration
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.indexes
+    - toc.follow
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/favicon.ico
+  logo: assets/logo.png
+
+# Plugins
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - minify:
+      minify_html: true
+
+# Customization
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yourusername/wifi-profile-extractor
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/wifi-profile-extractor/
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:materialx.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: yourusername
+      repo: wifi-profile-extractor
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Page tree
+nav:
+  - Home: 
+    - Overview: index.md
+    - Installation: installation.md
+    - Quick Start: quickstart.md
+  - User Guide:
+    - Getting Started: user-guide/getting-started.md
+    - Features: user-guide/features.md
+    - Troubleshooting: user-guide/troubleshooting.md
+  - Developer Guide:
+    - API Reference: docs/API.md
+    - Contributing: docs/CONTRIBUTING.md
+    - Development Setup: developer-guide/setup.md
+    - Testing: developer-guide/testing.md
+  - Security:
+    - Security Policy: docs/SECURITY.md
+    - Best Practices: security/best-practices.md
+  - About:
+    - Changelog: CHANGELOG.md
+    - License: LICENSE.md
+    - Support: support.md
+
+# Additional configuration files
+
+---
+# .flake8
+[flake8]
+max-line-length = 88
+extend-ignore = E203, W503, E501
+exclude = 
+    .git,
+    __pycache__,
+    build,
+    dist,
+    venv,
+    env,
+    .venv,
+    .env,
+    tests/fixtures/*,
+    docs/*
+per-file-ignores =
+    __init__.py:F401
+    tests/*:S101
+max-complexity = 10
+
+---
+# .coveragerc
+[run]
+source = src
+omit = 
+    */tests/*
+    */test_*
+    */conftest.py
+    */venv/*
+    */env/*
+    setup.py
+    */migrations/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+    class .*\bProtocol\):
+    @(abc\.)?abstractmethod
+
+[html]
+directory = htmlcov
+
+[xml]
+output = coverage.xml
+
+---
+# tox.ini
+[tox]
+envlist = py38, py39, py310, py311, flake8, mypy, security
+isolated_build = True
+
+[testenv]
+deps = 
+    pytest
+    pytest-cov
+    pytest-mock
+commands = pytest tests/ -v --cov=src --cov-report=term-missing
+
+[testenv:flake8]
+deps = flake8
+commands = flake8 src/ tests/
+
+[testenv:mypy]
+deps = 
+    mypy
+    types-all
+commands = mypy src/ --ignore-missing-imports
+
+[testenv:security]
+deps = 
+    bandit
+    safety
+commands = 
+    bandit -r src/
+    safety check
+
+[testenv:docs]
+deps = 
+    mkdocs
+    mkdocs-material
+commands = mkdocs build
+
+---
+# pytest.ini
+[tool:pytest]
+testpaths = tests
+python_files = test_*.py
+python_classes = Test*
+python_functions = test_*
+addopts = 
+    -ra
+    --strict-markers
+    --strict-config
+    --cov=src
+    --cov-report=term-missing:skip-covered
+    --cov-report=html
+    --cov-fail-under=80
+markers =
+    slow: marks tests as slow (deselect with '-m "not slow"')
+    integration: marks tests as integration tests
+    unit: marks tests as unit tests
+    security: marks tests as security tests
+    windows: marks tests that require Windows
+filterwarnings =
+    error
+    ignore::UserWarning
+    ignore::DeprecationWarning
+
+---
+# .editorconfig
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.{json,md}]
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+
+[*.bat]
+end_of_line = crlf
+
+---
+# scripts/install.py
+#!/usr/bin/env python3
+"""
+WiFi Profile Extractor Installation Script
+
+This script provides an interactive installation process for
+the WiFi Profile Extractor on Windows systems.
+"""
+
+import os
+import sys
+import subprocess
+import platform
+from pathlib import Path
+
+
+def print_banner():
+    """Print installation banner."""
+    print("=" * 60)
+    print("🔐 WiFi Profile Extractor - Installation Script")
+    print("=" * 60)
+    print()
+
+
+def check_system():
+    """Check system requirements."""
+    print("🔍 Checking system requirements...")
+    
+    # Check operating system
+    if platform.system().lower() != "windows":
+        print("❌ This application requires Windows OS")
+        return False
+    
+    print("✅ Windows OS detected")
+    
+    # Check Python version
+    if sys.version_info < (3, 8):
+        print(f"❌ Python 3.8+ required. Current version: {sys.version}")
+        return False
+    
+    print(f"✅ Python {sys.version.split()[0]} detected")
+    
+    return True
+
+
+def check_admin():
+    """Check if running as administrator."""
+    try:
+        import ctypes
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except Exception:
+        return False
+
+
+def install_dependencies():
+    """Install Python dependencies."""
+    print("\n📦 Installing dependencies...")
+    
+    try:
+        # Upgrade pip
+        subprocess.run([sys.executable, "-m", "pip", "install", "--upgrade", "pip"], 
+                      check=True, capture_output=True)
+        print("✅ pip upgraded")
+        
+        # Install requirements
+        subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], 
+                      check=True, capture_output=True)
+        print("✅ Dependencies installed")
+        
+        # Install package
+        subprocess.run([sys.executable, "-m", "pip", "install", "-e", "."], 
+                      check=True, capture_output=True)
+        print("✅ Package installed")
+        
+        return True
+        
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Installation failed: {e}")
+        return False
+
+
+def create_shortcuts():
+    """Create desktop shortcuts."""
+    print("\n🔗 Creating shortcuts...")
+    
+    try:
+        import winshell
+        from win32com.client import Dispatch
+        
+        desktop = winshell.desktop()
+        
+        # Create shortcut
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(os.path.join(desktop, "WiFi Profile Extractor.lnk"))
+        shortcut.Targetpath = sys.executable
+        shortcut.Arguments = f'-m streamlit run "{Path.cwd() / "src" / "app.py"}"'
+        shortcut.WorkingDirectory = str(Path.cwd())
+        shortcut.IconLocation = sys.executable
+        shortcut.save()
+        
+        print("✅ Desktop shortcut created")
+        return True
+        
+    except ImportError:
+        print("⚠️  Could not create shortcut (missing dependencies)")
+        return False
+    except Exception as e:
+        print(f"⚠️  Could not create shortcut: {e}")
+        return False
+
+
+def main():
+    """Main installation function."""
+    print_banner()
+    
+    # Check system requirements
+    if not check_system():
+        print("\n❌ System requirements not met")
+        input("Press Enter to exit...")
+        sys.exit(1)
+    
+    # Check admin privileges
+    is_admin = check_admin()
+    print(f"🔐 Administrator privileges: {'Yes' if is_admin else 'No'}")
+    if not is_admin:
+        print("⚠️  For full functionality (password access), run as Administrator")
+    
+    # Install dependencies
+    if not install_dependencies():
+        print("\n❌ Installation failed")
+        input("Press Enter to exit...")
+        sys.exit(1)
+    
+    # Create shortcuts
+    create_shortcuts()
+    
+    # Installation complete
+    print("\n" + "=" * 60)
+    print("🎉 Installation completed successfully!")
+    print("=" * 60)
+    print()
+    print("📋 Next steps:")
+    print("  1. Run the application:")
+    print(f"     python -m streamlit run {Path.cwd() / 'src' / 'app.py'}")
+    print("  2. Or use the desktop shortcut")
+    print("  3. For password access, run as Administrator")
+    print()
+    print("📖 Documentation: README.md")
+    print("🔒 Security Guide: docs/SECURITY.md")
+    print("🐛 Report Issues: https://github.com/yourusername/wifi-profile-extractor/issues")
+    print()
+    
+    # Offer to run now
+    run_now = input("Would you like to run the application now? (y/N): ").lower()
+    if run_now in ['y', 'yes']:
+        print("\n🚀 Starting WiFi Profile Extractor...")
+        try:
+            subprocess.run([sys.executable, "-m", "streamlit", "run", "src/app.py"])
+        except KeyboardInterrupt:
+            print("\n👋 Application stopped")
+    
+    input("\nPress Enter to exit...")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n👋 Installation cancelled by user")
+    except Exception as e:
+        print(f"\n❌ Unexpected error: {e}")
+        input("Press Enter to exit...")
+
+---
+# scripts/install.bat
+@echo off
+REM WiFi Profile Extractor - Windows Installation Script
+REM This script automates the installation process on Windows
+
+echo ============================================================
+echo   WiFi Profile Extractor - Windows Installation
+echo ============================================================
+echo.
+
+REM Check if Python is installed
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo ERROR: Python is not installed or not in PATH
+    echo Please install Python 3.8+ from https://python.org
+    pause
+    exit /b 1
+)
+
+echo Python detected, proceeding with installation...
+echo.
+
+REM Check if we're in the right directory
+if not exist "src\app.py" (
+    echo ERROR: Please run this script from the project root directory
+    echo The directory should contain src\app.py
+    pause
+    exit /b 1
+)
+
+REM Upgrade pip
+echo Upgrading pip...
+python -m pip install --upgrade pip
+if errorlevel 1 (
+    echo ERROR: Failed to upgrade pip
+    pause
+    exit /b 1
+)
+
+REM Install requirements
+echo Installing dependencies...
+python -m pip install -r requirements.txt
+if errorlevel 1 (
+    echo ERROR: Failed to install dependencies
+    pause
+    exit /b 1
+)
+
+REM Install package
+echo Installing WiFi Profile Extractor...
+python -m pip install -e .
+if errorlevel 1 (
+    echo ERROR: Failed to install package
+    pause
+    exit /b 1
+)
+
+echo.
+echo ============================================================
+echo   Installation completed successfully!
+echo ============================================================
+echo.
+echo To run the application:
+echo   python -m streamlit run src\app.py
+echo.
+echo For password access, run Command Prompt as Administrator
+echo.
+
+set /p run_now="Would you like to run the application now? (y/N): "
+if /i "%run_now%"=="y" (
+    echo.
+    echo Starting WiFi Profile Extractor...
+    python -m streamlit run src\app.py
+)
+
+pause
