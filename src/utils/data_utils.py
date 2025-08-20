@@ -15,9 +15,9 @@ from pathlib import Path
 
 import pandas as pd
 
-from utils.system_utils import SystemUtils  
-from core.exceptions import WiFiExtractorBaseException
-from config.settings import app_config
+from src.utils.system_utils import SystemUtils  
+from src.core.exceptions import WiFiExtractorBaseException
+from src.config.settings import app_config
 
 
 logger = logging.getLogger(__name__)

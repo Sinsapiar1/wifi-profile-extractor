@@ -12,12 +12,12 @@ import logging
 from typing import List, Tuple, Optional
 from dataclasses import dataclass
 
-from core.exceptions import (
+from src.core.exceptions import (
     UnsupportedOperatingSystemError,
     NetshCommandError,
     InsufficientPrivilegesError
 )
-from config.settings import netsh_config
+from src.config.settings import netsh_config
 
 
 logger = logging.getLogger(__name__)
