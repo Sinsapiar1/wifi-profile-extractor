@@ -140,9 +140,30 @@ class DataExporter:
             Excel file as bytes
         """
         if df.empty:
-            # Return empty workbook
+            # Return empty workbook with optional metadata sheet
             empty_df = pd.DataFrame({"message": ["No data to export"]})
-            return empty_df.to_excel(None, index=False, engine='openpyxl').getvalue()
+            output = io.BytesIO()
+            with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                empty_df.to_excel(writer, sheet_name='WiFi_Profiles', index=False)
+                if include_metadata:
+                    metadata_df = pd.DataFrame({
+                        'Property': [
+                            'Export Time',
+                            'Total Profiles',
+                            'Passwords Masked',
+                            'Application',
+                            'Version'
+                        ],
+                        'Value': [
+                            datetime.now().isoformat(),
+                            0,
+                            mask_passwords,
+                            app_config.APP_NAME,
+                            app_config.APP_VERSION
+                        ]
+                    })
+                    metadata_df.to_excel(writer, sheet_name='Metadata', index=False)
+            return output.getvalue()
         
         # Prepare data
         export_df = df.copy()
