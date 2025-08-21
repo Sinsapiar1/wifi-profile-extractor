@@ -67,6 +67,8 @@ class WiFiProfileApp:
             st.session_state.show_passwords = not app_config.MASK_PASSWORDS_DEFAULT
         if 'privilege_status' not in st.session_state:
             st.session_state.privilege_status = None
+        if 'demo_mode' not in st.session_state:
+            st.session_state.demo_mode = False
     
     def configure_page(self):
         """Configure Streamlit page settings."""
@@ -154,13 +156,26 @@ class WiFiProfileApp:
         
         col1, col2 = st.columns(2)
         
+        is_windows = st.session_state.get('privilege_status', {}).get('os_compatible', False)
+        
         with col1:
-            if st.button("🔍 Scan Profiles", use_container_width=True, type="primary"):
-                self._scan_profiles()
+            if is_windows:
+                if st.button("🔍 Scan Profiles", use_container_width=True, type="primary"):
+                    self._scan_profiles()
+            else:
+                if st.button("🧪 Load Demo Profiles", use_container_width=True, type="primary"):
+                    self._load_demo_profiles()
         
         with col2:
-            if st.button("🔄 Refresh", use_container_width=True):
-                self._refresh_data()
+            if is_windows:
+                if st.button("🔄 Refresh", use_container_width=True):
+                    self._refresh_data()
+            else:
+                if st.button("🧹 Clear Data", use_container_width=True):
+                    st.session_state.profiles_data = None
+                    st.session_state.demo_mode = False
+                    st.session_state.last_refresh = datetime.now()
+                    st.info("Data cleared")
         
         # Password visibility toggle
         st.session_state.show_passwords = st.toggle(
@@ -276,6 +291,7 @@ class WiFiProfileApp:
                 
         except UnsupportedOperatingSystemError as e:
             st.error(f"❌ {e.message}")
+            st.info("You can use demo data on non-Windows systems from the sidebar.")
         except InsufficientPrivilegesError as e:
             st.error(f"❌ {e.message}")
             st.info("💡 Try running as Administrator to access passwords")
@@ -288,6 +304,59 @@ class WiFiProfileApp:
         except Exception as e:
             st.error(f"❌ Unexpected error: {str(e)}")
             logger.exception("Unexpected error during profile scanning")
+
+    def _load_demo_profiles(self):
+        """Load demo data when running on non-Windows environments."""
+        try:
+            with st.spinner("Loading demo profiles..."):
+                sample = [
+                    {
+                        "ssid": "Home_WiFi",
+                        "authentication": "WPA2-Personal",
+                        "cipher": "CCMP",
+                        "password": "mysecret123",
+                        "connection_type": "ESS",
+                        "cost": "Unrestricted",
+                        "interface": "Wi-Fi",
+                        "security_key": "Present",
+                        "key_type": "passphrase",
+                        "has_password": True,
+                        "extraction_time": datetime.now().isoformat(),
+                    },
+                    {
+                        "ssid": "Office_Guest",
+                        "authentication": "Open",
+                        "cipher": "",
+                        "password": "",
+                        "connection_type": "ESS",
+                        "cost": "Unrestricted",
+                        "interface": "Wi-Fi",
+                        "security_key": "Absent",
+                        "key_type": "",
+                        "has_password": False,
+                        "extraction_time": datetime.now().isoformat(),
+                    },
+                    {
+                        "ssid": "MobileHotspot",
+                        "authentication": "WPA3-Personal",
+                        "cipher": "GCMP-256",
+                        "password": "SuperStrong!",
+                        "connection_type": "ESS",
+                        "cost": "Fixed",
+                        "interface": "Wi-Fi",
+                        "security_key": "Present",
+                        "key_type": "passphrase",
+                        "has_password": True,
+                        "extraction_time": datetime.now().isoformat(),
+                    },
+                ]
+                df = pd.DataFrame(sample)
+                st.session_state.profiles_data = df
+                st.session_state.last_refresh = datetime.now()
+                st.session_state.demo_mode = True
+                st.success("✅ Demo profiles loaded")
+        except Exception as e:
+            st.error(f"Failed to load demo data: {str(e)}")
     
     def _refresh_data(self):
         """Refresh current data."""
@@ -327,8 +396,13 @@ class WiFiProfileApp:
             - 🛡️ **Security Focused** - Local processing only
             """)
             
-            if st.button("🔍 Start Scanning", use_container_width=True, type="primary"):
-                self._scan_profiles()
+            is_windows = st.session_state.get('privilege_status', {}).get('os_compatible', False)
+            if is_windows:
+                if st.button("🔍 Start Scanning", use_container_width=True, type="primary"):
+                    self._scan_profiles()
+            else:
+                if st.button("🧪 Load Demo Profiles", use_container_width=True, type="primary"):
+                    self._load_demo_profiles()
     
     def _render_data_view(self):
         """Render data view with profiles information."""

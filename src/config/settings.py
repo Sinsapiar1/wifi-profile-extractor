@@ -18,6 +18,7 @@ class AppConfig:
     MASK_PASSWORDS_DEFAULT: bool = True
     PASSWORD_MASK: str = "••••••••"
     SEARCH_PLACEHOLDER: str = "Search SSID..."
+    SUPPORTED_FORMATS: List[str] = field(default_factory=lambda: ["CSV", "JSON", "XLSX"])
 
 @dataclass
 class NetshConfig:
